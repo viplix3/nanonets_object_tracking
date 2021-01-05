@@ -78,9 +78,6 @@ class Tracker:
             self._initiate_track(detections[detection_idx])
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
-
-
-
         # Update distance metric.
         active_targets = [t.track_id for t in self.tracks if t.is_confirmed()]
         features, targets = [], []
@@ -89,16 +86,7 @@ class Tracker:
                 continue
             features += track.features
             targets += [track.track_id for _ in track.features]
-            #track.features = [] # WHY NOT retain feature info inside tracker.
-            track.features = [track.features[-1]] #Retain most recent feature of the track.
-
-
-        #for t in self.tracks:
-        #    if t.is_confirmed():
-        #        print(len(t.features),'here_1',t.track_id,np.array(t.features).shape)
-        
-        #print(np.array(features).shape)
-
+            track.features = []
         self.metric.partial_fit(
             np.asarray(features), np.asarray(targets), active_targets)
 
